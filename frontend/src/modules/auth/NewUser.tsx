@@ -1,20 +1,22 @@
-import { Card, Title, TextInput, Grid, Button } from '@mantine/core';
+import { Grid, Card, TextInput, Button, Title } from '@mantine/core';
 import React, { useState } from 'react';
 
-const Login = () => {
+const NewUser = () => {
 	const [name, setName] = useState<any>('');
 	const [email, setEmail] = useState<any>('');
+	const [password, setPassword] = useState<any>('');
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		console.log(name, email);
+		console.log(name, email, password);
 		setName('');
 		setEmail('');
+		setPassword('');
 	};
 
 	return (
 		<>
-			<Title align='center'>Login</Title>
+			<Title align='center'>New User</Title>
 			<Grid className='flex justify-center'>
 				<Grid.Col md={4}>
 					<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
@@ -31,8 +33,14 @@ const Login = () => {
 								value={email}
 								onChange={e => setEmail(e.target.value)}
 							/>
+							<TextInput
+								label='Password'
+								placeholder='Password'
+								value={password}
+								onChange={e => setPassword(e.target.value)}
+							/>
 							<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
-								Login
+								Create
 							</Button>
 						</form>
 					</Card>
@@ -42,4 +50,4 @@ const Login = () => {
 	);
 };
 
-export default Login;
+export default NewUser;

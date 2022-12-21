@@ -1,13 +1,23 @@
-import React from 'react'
-import {Link} from 'react-router-dom'
+import { Button, Title } from '@mantine/core';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
-  return (
-    <div>
-        <Link to={'/auth'} className='text-blue-500 underline'>Login</Link>
-        <div className='font-bold text-center text-2xl'>Create a Question?</div>
-    </div>
-  )
-}
+	return (
+		<>
+			<div className='flex justify-end mt-1 mr-1'>
+				<Link to={'/auth'}>
+					<Button className='bg-blue-500 mr-1'>Login</Button>
+        </Link>
+        <Link to={'/new-user'}>
+					<Button className='bg-blue-500'>Create User</Button>
+				</Link>
+			</div>
+			<div>
+				<Title align='center'>Question List</Title>
+			</div>
+		</>
+	);
+};
 
-export default Home
+export default Home;
