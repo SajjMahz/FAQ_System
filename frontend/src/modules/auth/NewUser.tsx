@@ -1,10 +1,18 @@
-import { Grid, Card, TextInput, Button, Title } from '@mantine/core';
+import { Grid, Card, TextInput, PasswordInput, Button, Title } from '@mantine/core';
 import React, { useState } from 'react';
+import api from '../api/api';
+import {toast} from 'react-toastify'
 
 const NewUser = () => {
 	const [name, setName] = useState<any>('');
 	const [email, setEmail] = useState<any>('');
 	const [password, setPassword] = useState<any>('');
+
+	const saveUser = async (data:any) => {
+		const res:any = await api.post('store', data)
+		// console.log(res)
+		toast(res.data.message)
+	}
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
@@ -12,6 +20,8 @@ const NewUser = () => {
 		setName('');
 		setEmail('');
 		setPassword('');
+		const data = {name, email, password}
+		saveUser(data)
 	};
 
 	return (
@@ -33,7 +43,7 @@ const NewUser = () => {
 								value={email}
 								onChange={e => setEmail(e.target.value)}
 							/>
-							<TextInput
+							<PasswordInput
 								label='Password'
 								placeholder='Password'
 								value={password}
