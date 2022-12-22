@@ -9,7 +9,7 @@ const NewUser = () => {
 	const [password, setPassword] = useState<any>('');
 
 	const saveUser = async (data:any) => {
-		const res:any = await api.post('store', data)
+		const res:any = await api.post('/user', data)
 		// console.log(res)
 		toast(res.data.message)
 	}

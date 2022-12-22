@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Comment from './comment/Comment';
-import { Button, Grid, Paper, Textarea } from '@mantine/core';
+import { Grid, Paper } from '@mantine/core';
 
 const QuestionDetail = () => {
-    const [comment, setComment] = useState<string>('')
+    // const [comment, setComment] = useState<string>('')
 	const { id } = useParams();
 	const { state }: any = useLocation();
 	const question = state;
 
-    const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
-        console.log(comment)
-        setComment('')
-    }
+    // const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault()
+    //     console.log(comment)
+    //     setComment('')
+    // }
 
 	return (
 		<Paper shadow='lg' className='h-96 '>
@@ -23,7 +23,7 @@ const QuestionDetail = () => {
 						{id} : {question}
 					</div>
 					<Comment qid={id} />
-					<form onSubmit={handleSubmit}>
+					{/* <form onSubmit={handleSubmit}>
 						<Textarea
 							placeholder='Your comment'
 							label='Your comment'
@@ -34,7 +34,7 @@ const QuestionDetail = () => {
 							autosize
 						/>
                         <Button className='bg-blue-500 mt-2 float-right' type='submit'>Add a Comment</Button>
-					</form>
+					</form> */}
 				</Grid.Col>
 			</Grid>
 		</Paper>

@@ -9,20 +9,28 @@ import {
 } from '@mantine/core';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../api/api';
 import Question from '../question/Question';
 
 const Home = () => {
 	const [opened, setOpened] = useState(false);
 	const [question, setQuestion] = useState<string>('');
 
+	const saveQuestion = async (question: string) => {
+		const res:any = await api.post('/questionStore',question)
+		toast(res.data.message)
+	}
+
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		console.log(question)
+		saveQuestion(question)
+		setOpened(false)
 		setQuestion('')
 	};
 
 	const QuestionModal = (
-		<Modal opened={opened} onClose={() => setOpened(false)}>
+		<Modal opened={opened} onClose={() => setOpened(false)} title='Please ask your Question'>
 			<form onSubmit={handleSubmit}>
 				<TextInput
 					label='Question'
