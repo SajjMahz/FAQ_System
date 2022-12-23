@@ -1,50 +1,23 @@
-import {
-	Button,
-	Card,
-	Grid,
-	Group,
-	Modal,
-	TextInput,
-	Title,
-} from '@mantine/core';
-import React, { useState } from 'react';
+import { Button, Grid, Title } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import api from '../api/api';
 import Question from '../question/Question';
 
 const Home = () => {
-	const [opened, setOpened] = useState(false);
-	const [question, setQuestion] = useState<string>('');
+	// const [user, setUser] = useState<any>()
 
-	const saveQuestion = async (question: string) => {
-		const res:any = await api.post('/questionStore',question)
-		toast(res.data.message)
-	}
+	// const loadUsers = async () => {
+	// 	try {
+	// 		const res = await api.get('/getUser')
+	// 		// setUser(res?.data.users)
+	// 		console.log(res?.data.users)
+	// 	} catch (err:any) {
+	// 		toast(err, errorToast)
+	// 	}
+	// }
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-		e.preventDefault();
-		saveQuestion(question)
-		setOpened(false)
-		setQuestion('')
-	};
-
-	const QuestionModal = (
-		<Modal opened={opened} onClose={() => setOpened(false)} title='Please ask your Question'>
-			<form onSubmit={handleSubmit}>
-				<TextInput
-					label='Question'
-					placeholder='Enter your question'
-					value={question}
-					onChange={e => setQuestion(e.target.value)}
-					required
-				/>
-				<Button className='bg-blue-500 mt-2 float-right' type='submit'>
-					Submit
-				</Button>
-			</form>
-		</Modal>
-	);
+	// useEffect(()=>{
+	// 	loadUsers()
+	// },[])
 
 	return (
 		<>
@@ -52,24 +25,15 @@ const Home = () => {
 				<Link to={'/auth'}>
 					<Button className='bg-blue-500 mr-1'>Login</Button>
 				</Link>
-				<Link to={'/new-user'}>
-					<Button className='bg-blue-500'>Create User</Button>
-				</Link>
 			</div>
-			<Group position='center'>
-				<Button className='bg-blue-500' onClick={() => setOpened(true)}>
-					Ask Question
-				</Button>
-			</Group>
-			<Title align='center'>Question List</Title>
+			<Title align='center' mt={'lg'}>
+				Frequently Asked Questions
+			</Title>
 			<Grid>
-				<Grid.Col md={8} className='mx-auto'>
-					<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
-						<Question />
-					</Card>
+				<Grid.Col md={6} className='mx-auto' mt={'lg'}>
+					<Question />
 				</Grid.Col>
 			</Grid>
-			{QuestionModal}
 		</>
 	);
 };

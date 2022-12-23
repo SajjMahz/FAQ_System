@@ -2,61 +2,60 @@ import { Grid, Card, TextInput, PasswordInput, Button, Title } from '@mantine/co
 import React, { useState } from 'react';
 import api from '../api/api';
 import {toast} from 'react-toastify'
+import { successToast } from '../common/toast';
 
 const NewUser = () => {
-	const [name, setName] = useState<any>('');
-	const [email, setEmail] = useState<any>('');
-	const [password, setPassword] = useState<any>('');
+	const [user, setUser] = useState({
+		name: '',
+		email: '',
+		password: '',
+	});
 
-	const saveUser = async (data:any) => {
-		const res:any = await api.post('/user', data)
-		// console.log(res)
-		toast(res.data.message)
-	}
+	const saveUser = async (data: any) => {
+		const res: any = await api.post('/user', data);
+		toast(res.data.message, successToast);
+	};
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		console.log(name, email, password);
-		setName('');
-		setEmail('');
-		setPassword('');
-		const data = {name, email, password}
-		saveUser(data)
+		saveUser(user);
+		setUser({ name: '', email: '', password: '' });
 	};
 
 	return (
-		<>
-			<Title align='center'>New User</Title>
-			<Grid className='flex justify-center'>
-				<Grid.Col md={4}>
-					<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
-						<form onSubmit={handleSubmit}>
-							<TextInput
-								label='Name'
-								placeholder='Name'
-								value={name}
-								onChange={e => setName(e.target.value)}
-							/>
-							<TextInput
-								label='Email'
-								placeholder='Email'
-								value={email}
-								onChange={e => setEmail(e.target.value)}
-							/>
-							<PasswordInput
-								label='Password'
-								placeholder='Password'
-								value={password}
-								onChange={e => setPassword(e.target.value)}
-							/>
-							<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
-								Create
-							</Button>
-						</form>
-					</Card>
-				</Grid.Col>
-			</Grid>
-		</>
+		<Grid>
+			<Grid.Col md={4} className='mx-auto'>
+				<Title align='center'>New User</Title>
+				<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
+					<form onSubmit={handleSubmit}>
+						<TextInput
+							label='Name'
+							placeholder='Name'
+							value={user.name}
+							onChange={e => setUser({ ...user, name: e.target.value })}
+							required
+						/>
+						<TextInput
+							label='Email'
+							placeholder='Email'
+							value={user.email}
+							onChange={e => setUser({ ...user, email: e.target.value })}
+							required
+						/>
+						<PasswordInput
+							label='Password'
+							placeholder='Password'
+							value={user.password}
+							onChange={e => setUser({ ...user, password: e.target.value })}
+							required
+						/>
+						<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
+							Create
+						</Button>
+					</form>
+				</Card>
+			</Grid.Col>
+		</Grid>
 	);
 };
 

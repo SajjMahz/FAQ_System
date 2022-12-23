@@ -1,5 +1,6 @@
 import { Card, Title, TextInput, Grid, Button } from '@mantine/core';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
 	const [name, setName] = useState<any>('');
@@ -13,32 +14,35 @@ const Login = () => {
 	};
 
 	return (
-		<>
-			<Title align='center'>Login</Title>
-			<Grid className='flex justify-center'>
-				<Grid.Col md={4}>
-					<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
-						<form onSubmit={handleSubmit}>
-							<TextInput
-								label='Name'
-								placeholder='Name'
-								value={name}
-								onChange={e => setName(e.target.value)}
-							/>
-							<TextInput
-								label='Email'
-								placeholder='Email'
-								value={email}
-								onChange={e => setEmail(e.target.value)}
-							/>
-							<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
-								Login
-							</Button>
-						</form>
-					</Card>
-				</Grid.Col>
-			</Grid>
-		</>
+		<Grid>
+			<Grid.Col md={4} className='mx-auto'>
+				<Title align='center'>Login</Title>
+				<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
+					<form onSubmit={handleSubmit}>
+						<TextInput
+							label='Name'
+							placeholder='Name'
+							value={name}
+							onChange={e => setName(e.target.value)}
+							required
+						/>
+						<TextInput
+							label='Email'
+							placeholder='Email'
+							value={email}
+							onChange={e => setEmail(e.target.value)}
+							required
+						/>
+						<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
+							Login
+						</Button>
+					</form>
+					<div className='mt-4 hover:text-blue-500'>
+						<Link to='/new-user'>Don't have an Account?</Link>
+					</div>
+				</Card>
+			</Grid.Col>
+		</Grid>
 	);
 };
 

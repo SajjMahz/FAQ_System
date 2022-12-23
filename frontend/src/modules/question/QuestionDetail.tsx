@@ -1,40 +1,47 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLocation, useParams } from 'react-router-dom';
 import Comment from './comment/Comment';
-import { Grid, Paper } from '@mantine/core';
+import { Grid, Group, Paper, Title, Tooltip } from '@mantine/core';
+import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
 
 const QuestionDetail = () => {
-    // const [comment, setComment] = useState<string>('')
 	const { id } = useParams();
 	const { state }: any = useLocation();
 	const question = state;
-
-    // const handleSubmit = (e:React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault()
-    //     console.log(comment)
-    //     setComment('')
-    // }
+	const [counter, setCounter] = useState({ up: 0, down: 0 });
 
 	return (
-		<Paper shadow='lg' className='h-96 '>
+		<Paper shadow='lg' className='h-full '>
 			<Grid className='justify-center'>
 				<Grid.Col md={5}>
-					<div className='font-bold'>
-						{id} : {question}
-					</div>
+					<Title className='capitalize'>
+						{/* {id} :*/} {question}
+					</Title>
+					<Group className='flex justify-between mb-2'>
+						<span>Created by:</span>
+						<span>Date:</span>
+					</Group>
+					<Group>
+						<Tooltip label='UpVote'>
+							<div
+								className='cursor-pointer flex items-center'
+								onClick={() => setCounter({ ...counter, up: counter.up + 1 })}
+							>
+								<BiUpArrow />
+								{counter.up}
+							</div>
+						</Tooltip>
+						<Tooltip label='DownVote'>
+							<div
+								className='cursor-pointer flex items-center'
+								onClick={() => setCounter({ ...counter, down: counter.down + 1 })}
+							>
+								<BiDownArrow />
+								{counter.down}
+							</div>
+						</Tooltip>
+					</Group>
 					<Comment qid={id} />
-					{/* <form onSubmit={handleSubmit}>
-						<Textarea
-							placeholder='Your comment'
-							label='Your comment'
-                            value={comment}
-                            onChange={(e)=>setComment(e.target.value)}
-							withAsterisk
-                            required
-							autosize
-						/>
-                        <Button className='bg-blue-500 mt-2 float-right' type='submit'>Add a Comment</Button>
-					</form> */}
 				</Grid.Col>
 			</Grid>
 		</Paper>

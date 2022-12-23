@@ -10,10 +10,10 @@ import QuestionDetail from './modules/question/QuestionDetail';
 function App() {
 	return (
 		<AppShell
-			padding='md'
+		className='h-full overflow-y-hidden'
 			header={
-				<Header height={60} p='xs' className='text-lg font-bold'>
-					<Link to='/'>FAQ System</Link>
+				<Header height={60} p='xs' className='text-2xl font-bold'>
+					<Link to='/'>FAQ's</Link>
 				</Header>
 			}
 		>
