@@ -1,27 +1,25 @@
-import {
-	Card,
-	Title,
-	TextInput,
-	Grid,
-	Button,
-	PasswordInput,
-} from '@mantine/core';
+import { Card, Title,TextInput,	Grid, Button, PasswordInput } from '@mantine/core';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import api from '../api/api';
 import { errorToast, successToast } from '../common/toast';
 
+interface IUser {
+	email: string;
+	password: string;
+}
+
 const Login = () => {
-	const [user, setUser] = useState({
+	const [user, setUser] = useState<IUser>({
 		email: '',
 		password: '',
 	});
 
 	const navigate = useNavigate();
 
-	const getLogin = async (user: any) => {
-		const res: any = await api.post('/login', user);
+	const getLogin = async (user: IUser) => {
+		const res = await api.post('/login', user);
 		const data = res?.data;
 		if (data.token) {
 			toast('Successfully login', successToast) && navigate('/');
@@ -31,7 +29,7 @@ const Login = () => {
 		}
 	};
 
-	const handleSubmit = (event: any) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		getLogin(user);
 		setUser({ email: '', password: '' });

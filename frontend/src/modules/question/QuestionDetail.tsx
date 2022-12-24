@@ -9,7 +9,7 @@ import { successToast } from '../common/toast';
 
 const QuestionDetail = () => {
 	const { id } = useParams();
-	const { state }: any = useLocation();
+	const { state } = useLocation();
 	const question = state;
 	const [users, setUsers] = useState<any[]>([]);
 	const [counterUp, setCounterUp] = useState(0);
@@ -20,7 +20,7 @@ const QuestionDetail = () => {
 		setUsers(res?.data?.users);
 	};
 
-	const getVote = async (id: any) => {
+	const getVote = async (id: string | undefined) => {
 		const res = await api.get(`/show/${id}`);
 		const data = res?.data?.data[0];
 		setCounterUp(data.up_vote);
@@ -49,7 +49,7 @@ const QuestionDetail = () => {
 		getVote(id);
 	};
 
-	const creator = users?.find((v: any) => v.id === question.created_by)?.name;
+	const creator = users?.find(v => v.id === question.created_by)?.name;
 
 	return (
 		<Paper shadow='lg' className='h-full '>

@@ -8,7 +8,7 @@ import { successToast } from '../common/toast';
 const TopBar = () => {
 	const userInfo = UseUserInfo();
 	const navigate = useNavigate();
-    const name = userInfo?.name
+	const name = userInfo?.name;
 
 	const logoutHandler = () => {
 		sessionStorage.clear();

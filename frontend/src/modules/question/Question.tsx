@@ -11,7 +11,7 @@ const Question = () => {
 	const [opened, setOpened] = useState(false);
 	const [question, setQuestion] = useState<string>('');
 
-	const {id} = UseUserInfo()
+	const { id } = UseUserInfo();
 
 	const navigate = useNavigate();
 
@@ -30,7 +30,7 @@ const Question = () => {
 
 	const saveQuestion = async (question: any) => {
 		if (question) {
-			const res: any = await api.post('/questionStore', question);
+			const res = await api.post('/questionStore', question);
 			toast(res.data.message, successToast) && loadData();
 		} else {
 			toast('Please enter valid Question', errorToast);
@@ -68,7 +68,7 @@ const Question = () => {
 
 	const handleClick = (e: any) => {
 		const id = e.id;
-		const question = {name: e.questions, created_by: e.created_by}
+		const question = { name: e.questions, created_by: e.created_by };
 		navigate(`/question/${id}`, { state: question });
 	};
 

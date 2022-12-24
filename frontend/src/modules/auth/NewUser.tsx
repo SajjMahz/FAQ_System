@@ -5,24 +5,30 @@ import {toast} from 'react-toastify'
 import { successToast } from '../common/toast';
 import { Link, useNavigate } from 'react-router-dom';
 
+interface IUser {
+	name: string;
+	email: string;
+	password: string;
+}
+
 const NewUser = () => {
-	const [user, setUser] = useState({
+	const [user, setUser] = useState<IUser>({
 		name: '',
 		email: '',
 		password: '',
 	});
 
-	const navigate = useNavigate()
+	const navigate = useNavigate();
 
-	const saveUser = async (data: any) => {
-		const res: any = await api.post('/user', data);
+	const saveUser = async (data: IUser) => {
+		const res = await api.post('/user', data);
 		toast(res.data.message, successToast);
 	};
 
-	const handleSubmit = (event: any) => {
+	const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		saveUser(user);
-		navigate('/auth')
+		navigate('/auth');
 		setUser({ name: '', email: '', password: '' });
 	};
 

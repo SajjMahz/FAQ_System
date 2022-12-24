@@ -8,7 +8,7 @@ import { errorToast, successToast } from '../../common/toast';
 const Comment = ({ qid, users }: any) => {
 	const [comment, setComment] = useState<string>('');
 	const [commentList, setCommentList] = useState<any>();
-	const {id} = UseUserInfo()
+	const { id } = UseUserInfo();
 
 	const loadData = async (question_id: any) => {
 		try {
@@ -22,8 +22,6 @@ const Comment = ({ qid, users }: any) => {
 	useEffect(() => {
 		loadData(qid);
 	}, [qid]);
-
-	// const creator = users?.find((v: any) => v.id === commentList[0]?.created_by)?.name;
 
 	const saveComment = async (comment: any) => {
 		try {
