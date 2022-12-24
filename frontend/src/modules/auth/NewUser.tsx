@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import api from '../api/api';
 import {toast} from 'react-toastify'
 import { successToast } from '../common/toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const NewUser = () => {
 	const [user, setUser] = useState({
@@ -10,6 +11,8 @@ const NewUser = () => {
 		email: '',
 		password: '',
 	});
+
+	const navigate = useNavigate()
 
 	const saveUser = async (data: any) => {
 		const res: any = await api.post('/user', data);
@@ -19,6 +22,7 @@ const NewUser = () => {
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
 		saveUser(user);
+		navigate('/auth')
 		setUser({ name: '', email: '', password: '' });
 	};
 
@@ -53,6 +57,9 @@ const NewUser = () => {
 							Create
 						</Button>
 					</form>
+					<div className='mt-4 hover:text-blue-500'>
+						<Link to='/auth'>Go Back</Link>
+					</div>
 				</Card>
 			</Grid.Col>
 		</Grid>

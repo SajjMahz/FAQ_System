@@ -1,16 +1,40 @@
-import { Card, Title, TextInput, Grid, Button } from '@mantine/core';
+import {
+	Card,
+	Title,
+	TextInput,
+	Grid,
+	Button,
+	PasswordInput,
+} from '@mantine/core';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import api from '../api/api';
+import { errorToast, successToast } from '../common/toast';
 
 const Login = () => {
-	const [name, setName] = useState<any>('');
-	const [email, setEmail] = useState<any>('');
+	const [user, setUser] = useState({
+		email: '',
+		password: '',
+	});
+
+	const navigate = useNavigate();
+
+	const getLogin = async (user: any) => {
+		const res: any = await api.post('/login', user);
+		const data = res?.data;
+		if (data.token) {
+			toast('Successfully login', successToast) && navigate('/');
+			sessionStorage.setItem('USER_ACCESS_TOKEN', data.token);
+		} else {
+			toast('Login Failed', errorToast);
+		}
+	};
 
 	const handleSubmit = (event: any) => {
 		event.preventDefault();
-		console.log(name, email);
-		setName('');
-		setEmail('');
+		getLogin(user);
+		setUser({ email: '', password: '' });
 	};
 
 	return (
@@ -20,17 +44,17 @@ const Login = () => {
 				<Card shadow='sm' mt='lg' p='lg' radius='md' withBorder>
 					<form onSubmit={handleSubmit}>
 						<TextInput
-							label='Name'
-							placeholder='Name'
-							value={name}
-							onChange={e => setName(e.target.value)}
-							required
-						/>
-						<TextInput
 							label='Email'
 							placeholder='Email'
-							value={email}
-							onChange={e => setEmail(e.target.value)}
+							value={user.email}
+							onChange={e => setUser({ ...user, email: e.target.value })}
+							required
+						/>
+						<PasswordInput
+							label='Password'
+							placeholder='Password'
+							value={user.password}
+							onChange={e => setUser({ ...user, password: e.target.value })}
 							required
 						/>
 						<Button mt='sm' className='bg-blue-500 float-right' type='submit'>

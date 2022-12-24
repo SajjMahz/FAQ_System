@@ -2,6 +2,7 @@ import { Button, Card, Group, Modal, TextInput, Title } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { UseUserInfo } from '../../context/UserInfo.context';
 import api from '../api/api';
 import { errorToast, successToast } from '../common/toast';
 
@@ -9,6 +10,8 @@ const Question = () => {
 	const [questionList, setQuestionList] = useState<any>();
 	const [opened, setOpened] = useState(false);
 	const [question, setQuestion] = useState<string>('');
+
+	const {id} = UseUserInfo()
 
 	const navigate = useNavigate();
 
@@ -36,7 +39,7 @@ const Question = () => {
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
-		const newQuestion = { questions: question };
+		const newQuestion = { questions: question, created_by: id };
 		saveQuestion(newQuestion);
 		setOpened(false);
 		setQuestion('');
@@ -65,7 +68,7 @@ const Question = () => {
 
 	const handleClick = (e: any) => {
 		const id = e.id;
-		const question = e.questions;
+		const question = {name: e.questions, created_by: e.created_by}
 		navigate(`/question/${id}`, { state: question });
 	};
 
