@@ -25,7 +25,16 @@ export function UserInfoProvider({ children }: IUserInfoProviderProps) {
 	});
 
 	const getUserInfo = async () => {
-		const res: any = await api.get('/getLoggedUser');
+		const token = sessionStorage.getItem('USER_ACCESS_TOKEN');
+		const accessToken = token;
+
+		const res: any = await api.get('/getLoggedUser', {
+			headers: {
+				'Content-Type': 'application/json',
+				'Access-Control-Allow-Origin': '*',
+				Authorization: accessToken !== null ? `Bearer ${accessToken}` : '',
+			},
+		});
 		setUserInfo(res?.data?.getLoggedUserInfo);
 	};
 
