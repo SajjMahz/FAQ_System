@@ -79,7 +79,7 @@ const Question = () => {
 					Ask Question
 				</Button>
 			</Group>
-			<ul className='h-3/4 overflow-auto'>
+			<ul className='h-4/5 overflow-auto'>
 				{questionList?.map((v: any) => {
 					return (
 						<li
