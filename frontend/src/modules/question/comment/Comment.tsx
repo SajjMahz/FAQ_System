@@ -2,7 +2,7 @@ import { Button, Textarea } from '@mantine/core';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { UseUserInfo } from '../../../context/UserInfo.context';
-import api from '../../api/api';
+import { callAxios } from '../../../plugins/axios';
 import { errorToast, successToast } from '../../common/toast';
 
 const Comment = ({ qid, users }: any) => {
@@ -12,7 +12,10 @@ const Comment = ({ qid, users }: any) => {
 
 	const loadData = async (question_id: any) => {
 		try {
-			const res = await api.get(`/getComment/${question_id}`);
+			const res = await callAxios({
+				url: `getComment/${question_id}`,
+				method: 'GET',
+			});
 			setCommentList(res?.data?.data);
 		} catch (err: any) {
 			toast(err, errorToast);
@@ -25,7 +28,11 @@ const Comment = ({ qid, users }: any) => {
 
 	const saveComment = async (comment: any) => {
 		try {
-			const res = await api.post('commentStore', comment);
+			const res = await callAxios({
+				url: 'commentStore',
+				method: 'POST',
+				data: comment,
+			});
 			toast(res.data.message, successToast) && loadData(qid);
 		} catch (error) {
 			toast('Please enter valid Comment', errorToast);

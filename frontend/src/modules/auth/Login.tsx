@@ -2,7 +2,7 @@ import { Card, Title,TextInput,	Grid, Button, PasswordInput } from '@mantine/cor
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import api from '../api/api';
+import { callAxios } from '../../plugins/axios';
 import { errorToast, successToast } from '../common/toast';
 
 interface IUser {
@@ -19,11 +19,15 @@ const Login = () => {
 	const navigate = useNavigate();
 
 	const getLogin = async (user: IUser) => {
-		const res = await api.post('/login', user);
+		const res = await callAxios({
+			url: 'login',
+			method: 'POST',
+			data: user,
+		});
 		const data = res?.data;
 		if (data.token) {
-			toast('Successfully login', successToast) && navigate('/');
 			sessionStorage.setItem('USER_ACCESS_TOKEN', data.token);
+			toast('Successfully login', successToast) && navigate('/');
 		} else {
 			toast('Login Failed', errorToast);
 		}

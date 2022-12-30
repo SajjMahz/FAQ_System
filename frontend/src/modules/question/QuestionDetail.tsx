@@ -3,9 +3,9 @@ import { useLocation, useParams } from 'react-router-dom';
 import Comment from './comment/Comment';
 import { Grid, Group, Paper, Title, Tooltip } from '@mantine/core';
 import { BiUpArrow, BiDownArrow } from 'react-icons/bi';
-import api from '../api/api';
 import { toast } from 'react-toastify';
 import { successToast } from '../common/toast';
+import { callAxios } from '../../plugins/axios';
 
 const QuestionDetail = () => {
 	const { id } = useParams();
@@ -16,12 +16,18 @@ const QuestionDetail = () => {
 	const [counterDown, setCounterDown] = useState(0);
 
 	const getAllUsers = async () => {
-		const res = await api.get('/getUser');
+		const res = await callAxios({
+			url: 'getUser',
+			method: 'GET',
+		});
 		setUsers(res?.data?.users);
 	};
 
 	const getVote = async (id: string | undefined) => {
-		const res = await api.get(`/show/${id}`);
+		const res = await callAxios({
+			url: `show/${id}`,
+			method: 'GET',
+		});
 		const data = res?.data?.data[0];
 		setCounterUp(data.up_vote);
 		setCounterDown(data.down_vote);
@@ -34,15 +40,23 @@ const QuestionDetail = () => {
 
 	const saveVote = async (con: number) => {
 		if (con === 1) {
-			const res = await api.post(`/vote/${id}`, {
-				up_vote: counterUp + 1,
-				down_vote: counterDown,
+			const res = await callAxios({
+				url: `vote/${id}`,
+				method: 'POST',
+				data: {
+					up_vote: counterUp + 1,
+					down_vote: counterDown,
+				},
 			});
 			toast(res?.data?.message, successToast);
 		} else {
-			const res = await api.post(`/vote/${id}`, {
-				up_vote: counterUp,
-				down_vote: counterDown + 1,
+			const res = await callAxios({
+				url: `vote/${id}`,
+				method: 'POST',
+				data: {
+					up_vote: counterUp,
+					down_vote: counterDown + 1,
+				},
 			});
 			toast(res?.data?.message, successToast);
 		}

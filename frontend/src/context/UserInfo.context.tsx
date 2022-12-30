@@ -1,5 +1,5 @@
 import { createContext,	ReactNode, useContext, useEffect, useState } from 'react';
-import api from '../modules/api/api';
+import { callAxios } from '../plugins/axios';
 
 interface IUserInfoContext {
 	id: number;
@@ -25,15 +25,9 @@ export function UserInfoProvider({ children }: IUserInfoProviderProps) {
 	});
 
 	const getUserInfo = async () => {
-		const token = sessionStorage.getItem('USER_ACCESS_TOKEN');
-		const accessToken = token;
-
-		const res: any = await api.get('/getLoggedUser', {
-			headers: {
-				'Content-Type': 'application/json',
-				'Access-Control-Allow-Origin': '*',
-				Authorization: accessToken !== null ? `Bearer ${accessToken}` : '',
-			},
+		const res = await callAxios({
+			url: 'getLoggedUser',
+			method: 'GET',
 		});
 		setUserInfo(res?.data?.getLoggedUserInfo);
 	};

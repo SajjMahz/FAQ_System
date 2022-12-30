@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { UseUserInfo } from '../../context/UserInfo.context';
-import api from '../api/api';
+import { callAxios } from '../../plugins/axios';
 import { errorToast, successToast } from '../common/toast';
 
 const Question = () => {
@@ -17,7 +17,10 @@ const Question = () => {
 
 	const loadData = async () => {
 		try {
-			const res = await api.get('/getQuestion');
+			const res = await callAxios({
+				url: 'getQuestion',
+				method: 'GET',
+			});
 			setQuestionList(res?.data?.data);
 		} catch (err: any) {
 			toast(err, errorToast);
@@ -30,7 +33,11 @@ const Question = () => {
 
 	const saveQuestion = async (question: any) => {
 		if (question) {
-			const res = await api.post('/questionStore', question);
+			const res = await callAxios({
+				url: 'questionStore',
+				method: 'POST',
+				data: question,
+			});
 			toast(res.data.message, successToast) && loadData();
 		} else {
 			toast('Please enter valid Question', errorToast);

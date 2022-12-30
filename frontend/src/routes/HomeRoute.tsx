@@ -1,9 +1,9 @@
 import { AppShell } from '@mantine/core';
 import { Route, Routes } from 'react-router-dom';
-import Home from '../home/Home';
-import QuestionDetail from '../question/QuestionDetail';
-import { UserInfoProvider } from '../../context/UserInfo.context';
-import TopBar from '../partials/TopBar';
+import Home from '../modules/home/Home';
+import QuestionDetail from '../modules/question/QuestionDetail';
+import { UserInfoProvider } from '../context/UserInfo.context';
+import TopBar from '../modules/partials/TopBar';
 
 const HomeRoute = () => {
 	return (

@@ -1,9 +1,9 @@
 import { Grid, Card, TextInput, PasswordInput, Button, Title } from '@mantine/core';
 import React, { useState } from 'react';
-import api from '../api/api';
-import {toast} from 'react-toastify'
+import { toast } from 'react-toastify';
 import { successToast } from '../common/toast';
 import { Link, useNavigate } from 'react-router-dom';
+import { callAxios } from '../../plugins/axios';
 
 interface IUser {
 	name: string;
@@ -21,7 +21,11 @@ const NewUser = () => {
 	const navigate = useNavigate();
 
 	const saveUser = async (data: IUser) => {
-		const res = await api.post('/user', data);
+		const res = await callAxios({
+			url: 'user',
+			method: 'POST',
+			data: data,
+		});
 		toast(res.data.message, successToast);
 	};
 

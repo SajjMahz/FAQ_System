@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import { Navigate, Route, Routes, useLocation } from "react-router-dom";
-import Login from "../auth/Login";
-import NewUser from "../auth/NewUser";
+import Login from "../modules/auth/Login";
+import NewUser from "../modules/auth/NewUser";
 import { isToken } from "../plugins/http";
 import HomeRoute from "./HomeRoute";
 
 const MainRoute = () => {
-    const [isLoggedIn,setIsLoggedIn] = useState<boolean>(isToken());
-    const route = useLocation().pathname;
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(isToken());
+  const route = useLocation().pathname;
 
-  useEffect(()=>{
-    setIsLoggedIn(isToken());
-  },[route]);
+  useEffect(() => {
+			setIsLoggedIn(isToken());
+		}, [route]);
 
     return (
         <Routes>
