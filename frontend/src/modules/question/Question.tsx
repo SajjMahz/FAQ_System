@@ -18,7 +18,7 @@ const Question = () => {
 	const loadData = async () => {
 		try {
 			const res = await callAxios({
-				url: 'getQuestion',
+				url: 'question',
 				method: 'GET',
 			});
 			setQuestionList(res?.data?.data);
@@ -34,7 +34,7 @@ const Question = () => {
 	const saveQuestion = async (question: any) => {
 		if (question) {
 			const res = await callAxios({
-				url: 'questionStore',
+				url: 'question',
 				method: 'POST',
 				data: question,
 			});

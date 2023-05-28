@@ -17,7 +17,7 @@ const QuestionDetail = () => {
 
 	const getAllUsers = async () => {
 		const res = await callAxios({
-			url: 'getUser',
+			url: 'user',
 			method: 'GET',
 		});
 		setUsers(res?.data?.users);
@@ -25,7 +25,7 @@ const QuestionDetail = () => {
 
 	const getVote = async (id: string | undefined) => {
 		const res = await callAxios({
-			url: `show/${id}`,
+			url: `question/show/${id}`,
 			method: 'GET',
 		});
 		const data = res?.data?.data[0];
@@ -41,7 +41,7 @@ const QuestionDetail = () => {
 	const saveVote = async (con: number) => {
 		if (con === 1) {
 			const res = await callAxios({
-				url: `vote/${id}`,
+				url: `question/vote/${id}`,
 				method: 'POST',
 				data: {
 					up_vote: counterUp + 1,
@@ -51,7 +51,7 @@ const QuestionDetail = () => {
 			toast(res?.data?.message, successToast);
 		} else {
 			const res = await callAxios({
-				url: `vote/${id}`,
+				url: `question/vote/${id}`,
 				method: 'POST',
 				data: {
 					up_vote: counterUp,

@@ -13,7 +13,7 @@ const Comment = ({ qid, users }: any) => {
 	const loadData = async (question_id: any) => {
 		try {
 			const res = await callAxios({
-				url: `getComment/${question_id}`,
+				url: `comment/show/${question_id}`,
 				method: 'GET',
 			});
 			setCommentList(res?.data?.data);
@@ -29,7 +29,7 @@ const Comment = ({ qid, users }: any) => {
 	const saveComment = async (comment: any) => {
 		try {
 			const res = await callAxios({
-				url: 'commentStore',
+				url: 'comment',
 				method: 'POST',
 				data: comment,
 			});
