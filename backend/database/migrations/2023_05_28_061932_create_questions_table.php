@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('questions');
             $table->integer('vote')->nullable();
+            $table->enum('vote_type', ['U', 'D', 'N'])->default('N');
             $table->unsignedInteger('created_by')->nullable();
             $table->foreign('created_by')->references('id')->on('users');
             $table->timestamps();

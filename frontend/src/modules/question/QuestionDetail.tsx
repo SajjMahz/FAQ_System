@@ -12,10 +12,8 @@ const QuestionDetail = () => {
 	const { state } = useLocation();
 	const question = state;
 	const [users, setUsers] = useState<any[]>([]);
-	// const [counterUp, setCounterUp] = useState(0);
-	// const [counterDown, setCounterDown] = useState(0);
-	const [counter, setCounter] = useState<number>(0);
 	const [vote, setVote] = useState<number>(0);
+	const [vote_status, setVote_status] = useState<string>('');
 
 	const getAllUsers = async () => {
 		const res = await callAxios({
@@ -31,9 +29,8 @@ const QuestionDetail = () => {
 			method: 'GET',
 		});
 		const data = res?.data?.data[0];
-		setVote(data.vote ?? 0)
-		// setCounterUp(data.up_vote);
-		// setCounterDown(data.down_vote);
+		setVote(data.vote ?? 0);
+		setVote_status(data.vote_type ?? '')
 	};
 
 	useEffect(() => {
@@ -41,53 +38,26 @@ const QuestionDetail = () => {
 		getVote(id);
 	}, [id]);
 
-	const handleCounter = (e: React.MouseEvent<HTMLButtonElement>) => {
-		const {id} = e.currentTarget
-		// id === 'up_vote' ? setCounter(1) : setCounter(-1)
-		if(id === 'up_vote') {
-			if(counter === 0) {
-				setVote(vote+1)
-				setCounter(1)
-			} else {
-				setVote(vote-1)
-				setCounter(0)
-			}
-		} 
-		else {
-			if(counter === 0) {
-				setVote(vote-1)
-				setCounter(1)
-			} else {
-				setVote(vote+1)
-				setCounter(0)
-			}
+	const handleCounter = async (e: React.MouseEvent<HTMLButtonElement>) => {
+		const qId = e.currentTarget.id;
+		if (qId === 'up_vote') {
+			const res = await callAxios({
+				url: `question/vote/${id}`,
+				method: 'POST',
+				data: { vote: 'U' },
+			});
+			toast(res?.data?.message, successToast);
+			getVote(id);
+		} else {
+			const res = await callAxios({
+				url: `question/vote/${id}`,
+				method: 'POST',
+				data: { vote: 'D' },
+			});
+			toast(res?.data?.message, successToast);
+			getVote(id);
 		}
-	}
-
-	// const saveVote = async (con: number) => {
-	// 	if (con === 1) {
-	// 		const res = await callAxios({
-	// 			url: `question/vote/${id}`,
-	// 			method: 'POST',
-	// 			data: {
-	// 				up_vote: counterUp + 1,
-	// 				down_vote: counterDown,
-	// 			},
-	// 		});
-	// 		toast(res?.data?.message, successToast);
-	// 	} else {
-	// 		const res = await callAxios({
-	// 			url: `question/vote/${id}`,
-	// 			method: 'POST',
-	// 			data: {
-	// 				up_vote: counterUp,
-	// 				down_vote: counterDown + 1,
-	// 			},
-	// 		});
-	// 		toast(res?.data?.message, successToast);
-	// 	}
-	// 	getVote(id);
-	// };
+	};
 
 	const creator = users?.find(v => v.id === question.created_by)?.name;
 
@@ -95,38 +65,38 @@ const QuestionDetail = () => {
 		<Paper shadow='lg' className='h-full '>
 			<Grid className='justify-center'>
 				<Grid.Col md={5}>
-					<Title className='capitalize'>{question.name}</Title>
-					<Group className='mb-2'>
-						<span>Created by: {creator}</span>
-					</Group>
-					<Group>
-						<div className="flex flex-col items-center">
-							<Button variant='outline' id='up_vote' className='text-black border-none' onClick={handleCounter}>
-								<BiUpArrow size={20}/>
-							</Button>
-							<div>{vote}</div>
-							<Button variant='outline' id='down_vote' className='text-black border-none' onClick={handleCounter}>
-								<BiDownArrow size={20}/>
-							</Button>
+					<Group position='left' className='gap-0 ml-[-45px]'>
+						<div>
+							<div className='flex flex-col items-center'>
+								<Tooltip label='UpVote'>
+									<Button
+										variant='outline'
+										id='up_vote'
+										className='text-black border-none'
+										onClick={handleCounter}
+									>
+										<BiUpArrow size={20} className={vote_status === 'U'? 'fill-red-600' : ''}/>
+									</Button>
+								</Tooltip>
+								<div>{vote}</div>
+								<Tooltip label='DownVote'>
+									<Button
+										variant='outline'
+										id='down_vote'
+										className='text-black border-none'
+										onClick={handleCounter}
+									>
+										<BiDownArrow size={20} className={vote_status === 'D'? 'fill-blue-500' : ''}/>
+									</Button>
+								</Tooltip>
+							</div>
 						</div>
-						<Tooltip label='UpVote'>
-							<div
-								className='cursor-pointer flex items-center'
-								// onClick={() => saveVote(1)}
-							>
-								<BiUpArrow />
-								{/* {counterUp ? counterUp : 0} */}
+						<div>
+							<Title className='capitalize'>{question.name}</Title>
+							<div className='mb-2'>
+								<span>Created by: {creator}</span>
 							</div>
-						</Tooltip>
-						<Tooltip label='DownVote'>
-							<div
-								className='cursor-pointer flex items-center'
-								// onClick={() => saveVote(2)}
-							>
-								<BiDownArrow />
-								{/* {counterDown ? counterDown : 0} */}
-							</div>
-						</Tooltip>
+						</div>
 					</Group>
 					<Comment qid={id} users={users} />
 				</Grid.Col>
