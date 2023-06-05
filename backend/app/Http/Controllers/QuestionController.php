@@ -56,7 +56,7 @@ class QuestionController extends Controller
     public function show($id)
     {
         try {
-            $question = Question::where('id', $id)->get(['id', 'questions', 'vote', 'created_by']);
+            $question = Question::where('id', $id)->get(['id', 'questions', 'vote', 'vote_type', 'created_by']);
             return response()->json([
                 'status' => 1,
                 'data' => $question
@@ -72,22 +72,33 @@ class QuestionController extends Controller
             $vote_param = $request->get('vote');
             $vote = $question->vote;
 
-            if ($vote_param == 1) {
-                if ($vote == $question->getOriginal('vote')) {
+            if($vote_param == "U") {
+                if($question->vote_type == "U") {
+                    $question->vote = $vote - 1;
+                    $question->vote_type = "N";      
+                } else if($question->vote_type == "D") {
+                    $question->vote = $vote + 2;
+                    $question->vote_type = "U";
+                } else {
                     $question->vote = $vote + 1;
+                    $question->vote_type = "U";
+                }
+            } else if($vote_param == "D") {
+                if($question->vote_type == "D") {
+                    $question->vote = $vote + 1;
+                    $question->vote_type = "N";
+                } else if($question->vote_type == "U") {
+                    $question->vote = $vote - 2;
+                    $question->vote_type = "D";
                 } else {
                     $question->vote = $vote - 1;
+                    $question->vote_type = "D";
                 }
-            } else if ($vote_param == -1) {
-                $question->vote = $vote + 1;
             }
 
-            // $question->vote = $request->get('vote');
             $question->save();
             return response()->json([
-                'status' => 1,
-                // 'message' => 'Question voted successfully.'
-                'vote' => $question->vote
+                'message' => $vote_param == "U" ? 'Upvoted' : 'Downvoted'
             ]);
         } catch (\Throwable $th) {
             throw $th;
