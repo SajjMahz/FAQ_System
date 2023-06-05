@@ -56,7 +56,7 @@ class QuestionController extends Controller
     public function show($id)
     {
         try {
-            $question = Question::where('id', $id)->get(['id', 'questions', 'up_vote', 'down_vote', 'created_by']);
+            $question = Question::where('id', $id)->get(['id', 'questions', 'vote', 'created_by']);
             return response()->json([
                 'status' => 1,
                 'data' => $question
@@ -69,12 +69,25 @@ class QuestionController extends Controller
     public function vote(Request $request, $id) {
         try {
             $question = Question::find($id);
-            $question->up_vote = $request->get('up_vote');
-            $question->down_vote = $request->get('down_vote');
+            $vote_param = $request->get('vote');
+            $vote = $question->vote;
+
+            if ($vote_param == 1) {
+                if ($vote == $question->getOriginal('vote')) {
+                    $question->vote = $vote + 1;
+                } else {
+                    $question->vote = $vote - 1;
+                }
+            } else if ($vote_param == -1) {
+                $question->vote = $vote + 1;
+            }
+
+            // $question->vote = $request->get('vote');
             $question->save();
             return response()->json([
                 'status' => 1,
-                'message' => 'Question voted successfully.'
+                // 'message' => 'Question voted successfully.'
+                'vote' => $question->vote
             ]);
         } catch (\Throwable $th) {
             throw $th;

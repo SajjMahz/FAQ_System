@@ -1,4 +1,4 @@
-import { Card, Title,TextInput,	Grid, Button, PasswordInput } from '@mantine/core';
+import { Card, Title,TextInput,	Grid, Button, PasswordInput, Group } from '@mantine/core';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -59,13 +59,16 @@ const Login = () => {
 							onChange={e => setUser({ ...user, password: e.target.value })}
 							required
 						/>
-						<Button mt='sm' className='bg-blue-500 float-right' type='submit'>
+						<Group mt={'md'} position='apart'>
+						<div className='flex flex-col'>
+							<Link to='/new-user' className='hover:text-blue-500'>Don't have an Account?</Link>
+							<Link to='/forgot-password' className='hover:text-red-500'>Forgot Password</Link>
+						</div>
+						<Button className='bg-blue-500 float-right' type='submit'>
 							Login
 						</Button>
+						</Group>
 					</form>
-					<div className='mt-4 hover:text-blue-500'>
-						<Link to='/new-user'>Don't have an Account?</Link>
-					</div>
 				</Card>
 			</Grid.Col>
 		</Grid>
