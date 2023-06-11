@@ -1,5 +1,0 @@
-{
-    "terminal.integrated.env.windows": {
-        "PATH": "D:\\php;${env:PATH}"
-    }    
-}
