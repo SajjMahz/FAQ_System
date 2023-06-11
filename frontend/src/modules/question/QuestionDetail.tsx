@@ -30,7 +30,7 @@ const QuestionDetail = () => {
 		});
 		const data = res?.data?.data[0];
 		setVote(data.vote ?? 0);
-		setVote_status(data.vote_type ?? '')
+		setVote_status(res?.data?.vote_status ?? '')
 	};
 
 	useEffect(() => {

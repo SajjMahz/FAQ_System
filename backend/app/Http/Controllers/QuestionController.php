@@ -3,13 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Question;
+use App\Models\Vote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Throwable;
 
 class QuestionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         try {
@@ -18,51 +18,42 @@ class QuestionController extends Controller
                 'status' => 1,
                 'data' => $questions
             ]);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (Throwable $th) {
+            return $th;
         }
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         try {
             $question = new Question();
             $question->questions = $request->get('questions');
-            $question->created_by = $request->get('created_by');
+            $question->created_by = Auth::id();
             $question->save();
             return response()->json([
                 'status' => 1,
                 'message' => 'Question created successfully.'
             ]);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (Throwable $th) {
+            return $th;
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id)
     {
         try {
-            $question = Question::where('id', $id)->get(['id', 'questions', 'vote', 'vote_type', 'created_by']);
+            $question = Question::where('id', $id)->get(['id', 'questions', 'vote', 'created_by']);
+            $vote = Vote::where([
+                ['qid', $id],
+                ['user_id', Auth::id()],
+            ])->get()->first();
             return response()->json([
                 'status' => 1,
-                'data' => $question
+                'data' => $question,
+                'vote_status' => $vote->vote_type
             ]);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (Throwable $th) {
+            return $th;
         }
     }
 
@@ -70,62 +61,70 @@ class QuestionController extends Controller
         try {
             $question = Question::find($id);
             $vote_param = $request->get('vote');
-            $vote = $question->vote;
 
-            if($vote_param == "U") {
-                if($question->vote_type == "U") {
-                    $question->vote = $vote - 1;
-                    $question->vote_type = "N";      
-                } else if($question->vote_type == "D") {
-                    $question->vote = $vote + 2;
-                    $question->vote_type = "U";
-                } else {
-                    $question->vote = $vote + 1;
-                    $question->vote_type = "U";
-                }
-            } else if($vote_param == "D") {
-                if($question->vote_type == "D") {
-                    $question->vote = $vote + 1;
-                    $question->vote_type = "N";
-                } else if($question->vote_type == "U") {
-                    $question->vote = $vote - 2;
-                    $question->vote_type = "D";
-                } else {
-                    $question->vote = $vote - 1;
-                    $question->vote_type = "D";
-                }
+            $q_vote = Vote::where([
+                ['qid', $id],
+                ['user_id', Auth::id()],
+            ])->get()->first();
+
+            if($q_vote == null) {
+                $this->saveVote($vote_param, $question);
+            } else {
+                $this->updateVote($vote_param, $question, $q_vote);
             }
 
-            $question->save();
             return response()->json([
                 'message' => $vote_param == "U" ? 'Upvoted' : 'Downvoted'
             ]);
-        } catch (\Throwable $th) {
-            throw $th;
+        } catch (Throwable $th) {
+            return $th;
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Question $question)
-    {
-        //
+    public function saveVote($vote_type, Question $question) {
+        if($vote_type == 'U') {
+            $question->vote = $question->vote + 1;
+            $vote = new Vote();
+            $vote->vote_type = $vote_type;
+            $vote->qid = $question->id;
+            $vote->user_id = Auth::id();
+            $vote->save();
+        } elseif ($vote_type == 'D') {
+            $question->vote = $question->vote - 1;
+            $vote = new Vote();
+            $vote->vote_type = $vote_type;
+            $vote->qid = $question->id;
+            $vote->user_id = Auth::id();
+            $vote->save();
+        }
+        $question->save();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Question $question)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Question $question)
-    {
-        //
+    public function updateVote($vote_type, Question $question,Vote $q_vote) {
+        if($vote_type == 'U') {
+            if($q_vote->vote_type == 'D') {
+                $question->vote = $question->vote + 2;
+                $q_vote->vote_type = 'U';
+            } elseif ($q_vote->vote_type == 'U') {
+                $question->vote = $question->vote - 1;
+                $q_vote->vote_type = 'N';
+            } else {
+                $question->vote = $question->vote + 1;
+                $q_vote->vote_type = 'U';
+            }
+        } elseif ($vote_type == 'D') {
+            if($q_vote->vote_type == 'U') {
+                $question->vote = $question->vote -2;
+                $q_vote->vote_type = 'D';
+            } elseif ($q_vote->vote_type == 'D') {
+                $question->vote = $question->vote + 1;
+                $q_vote->vote_type = 'N';
+            } else {
+                $question->vote = $question->vote - 1;
+                $q_vote->vote_type = 'D';
+            }
+        }
+        $q_vote->save();
+        $question->save();
     }
 }
